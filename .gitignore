@@ -1,0 +1,5 @@
+ObjectScanner3D-IPA/
+build/
+*.xcarchive
+*.ipa
+.DS_Store

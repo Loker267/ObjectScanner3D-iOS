@@ -5,10 +5,14 @@ import QuickLook
 public struct SceneKitView: UIViewRepresentable {
     public let modelURL: URL
     public var isWireframe: Bool = false
+    public var zoomScale: Float = 1.0
+    public var resetID: UUID = UUID()
     
-    public init(modelURL: URL, isWireframe: Bool = false) {
+    public init(modelURL: URL, isWireframe: Bool = false, zoomScale: Float = 1.0, resetID: UUID = UUID()) {
         self.modelURL = modelURL
         self.isWireframe = isWireframe
+        self.zoomScale = zoomScale
+        self.resetID = resetID
     }
     
     public func makeUIView(context: Context) -> SCNView {
@@ -21,18 +25,50 @@ public struct SceneKitView: UIViewRepresentable {
         scnView.autoenablesDefaultLighting = false
         scnView.backgroundColor = UIColor.systemBackground
         
-        // Добавляем профессиональное трехточечное освещение
-        setupLighting(in: scene)
+        // Устанавливаем плавный режим вращения
+        scnView.defaultCameraController.interactionMode = .orbitTurntable
         
+        // Освещение сцены
+        setupLighting(in: scene)
         applyWireframe(scene: scene, wireframe: isWireframe)
         
+        context.coordinator.baseNode = scene.rootNode
         return scnView
     }
     
     public func updateUIView(_ uiView: SCNView, context: Context) {
-        if let scene = uiView.scene {
-            applyWireframe(scene: scene, wireframe: isWireframe)
+        guard let scene = uiView.scene else { return }
+        
+        applyWireframe(scene: scene, wireframe: isWireframe)
+        
+        // Масштабирование через кнопки зума
+        SCNTransaction.begin()
+        SCNTransaction.animationDuration = 0.25
+        for child in scene.rootNode.childNodes where child.light == nil {
+            child.scale = SCNVector3(zoomScale, zoomScale, zoomScale)
         }
+        SCNTransaction.commit()
+        
+        // Сброс положения по требованию
+        if context.coordinator.lastResetID != resetID {
+            context.coordinator.lastResetID = resetID
+            uiView.defaultCameraController.stopInertia()
+            SCNTransaction.begin()
+            SCNTransaction.animationDuration = 0.4
+            for child in scene.rootNode.childNodes where child.light == nil {
+                child.eulerAngles = SCNVector3(0, 0, 0)
+            }
+            SCNTransaction.commit()
+        }
+    }
+    
+    public func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+    
+    public class Coordinator {
+        var baseNode: SCNNode?
+        var lastResetID: UUID = UUID()
     }
     
     private func loadScene(from url: URL) -> SCNScene {
@@ -40,14 +76,13 @@ public struct SceneKitView: UIViewRepresentable {
             .checkConsistency: true,
             .flattenScene: false
         ]) {
-            // Центрируем геометрию в (0,0,0)
             centerSceneGeometry(scene: scene)
             return scene
         }
         
-        // Запасная сцена, если файл еще формируется
+        // Запасная сцена при ошибке чтения
         let fallback = SCNScene()
-        let box = SCNBox(width: 0.3, height: 0.3, length: 0.3, chamferRadius: 0.03)
+        let box = SCNBox(width: 0.25, height: 0.25, length: 0.25, chamferRadius: 0.03)
         box.firstMaterial?.diffuse.contents = UIColor.systemBlue
         let node = SCNNode(geometry: box)
         fallback.rootNode.addChildNode(node)
@@ -55,7 +90,6 @@ public struct SceneKitView: UIViewRepresentable {
     }
     
     private func setupLighting(in scene: SCNScene) {
-        // Фоновый мягкий свет
         let ambientLight = SCNLight()
         ambientLight.type = .ambient
         ambientLight.intensity = 800
@@ -64,7 +98,6 @@ public struct SceneKitView: UIViewRepresentable {
         ambientNode.light = ambientLight
         scene.rootNode.addChildNode(ambientNode)
         
-        // Направленный рисующий свет
         let keyLight = SCNLight()
         keyLight.type = .directional
         keyLight.intensity = 1500
@@ -75,7 +108,6 @@ public struct SceneKitView: UIViewRepresentable {
         keyNode.look(at: SCNVector3(0, 0, 0))
         scene.rootNode.addChildNode(keyNode)
         
-        // Заполняющий контурный свет
         let fillLight = SCNLight()
         fillLight.type = .directional
         fillLight.intensity = 800

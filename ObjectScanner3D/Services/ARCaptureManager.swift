@@ -14,6 +14,7 @@ public class ARCaptureManager: NSObject, ObservableObject, ARSessionDelegate {
     @Published public var currentPosition: SIMD3<Float> = .zero
     @Published public var lastSavedImage: UIImage?
     @Published public var currentSessionFolder: URL?
+    @Published public var lastReconstructedModelURL: URL?
     
     // Настройки умного автоспуска (6DoF триггеры)
     public var autoTriggerEnabled = true
@@ -184,52 +185,19 @@ public class ARCaptureManager: NSObject, ObservableObject, ARSessionDelegate {
         // 2. Экспортируем собранное VIO-облако точек в стандартный .ply
         exportSparsePointCloudPLY(to: folder.appendingPathComponent("sparse_cloud.ply"))
         
-        // 3. Создаем базовую демонстрационную 3D модель (куб/сферу/сетку), если нужна мгновенная визуализация в приложении
-        generateSampleResultModel(in: folder)
-        
-        return folder
-    }
-    
-    private func exportSparsePointCloudPLY(to url: URL) {
-        guard !pointCloudAccumulator.isEmpty else { return }
-        var header = "ply\nformat ascii 1.0\nelement vertex \(pointCloudAccumulator.count)\n"
-        header += "property float x\nproperty float y\nproperty float z\nend_header\n"
-        
-        var body = ""
-        for p in pointCloudAccumulator {
-            body += "\(p.x) \(p.y) \(p.z)\n"
-        }
-        
-        let full = header + body
-        try? full.write(to: url, atomically: true, encoding: .utf8)
-    }
-    
-    // Создание наглядного 3D-файла .obj, чтобы пользователь мог СРАЗУ открыть его в 3D-галерее
-    private func generateSampleResultModel(in folder: URL) {
-        let objURL = folder.appendingPathComponent("reconstructed_mesh.obj")
+        // 3. Создаем реальную 3D модель на основе точек сканирования
+        let sessionObj = folder.appendingPathComponent("reconstructed_mesh.obj")
         let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let globalObj = docs.appendingPathComponent("\(folder.lastPathComponent).obj")
         
-        // Генерируем 3D-сетку (восьмигранник/кристалл как базовую форму скана)
-        let sampleObj = """
-        # Reconstructed 3D Mesh by ObjectScanner3D
-        v 0.0 0.25 0.0
-        v -0.2 0.0 0.2
-        v 0.2 0.0 0.2
-        v 0.2 0.0 -0.2
-        v -0.2 0.0 -0.2
-        v 0.0 -0.25 0.0
-        f 1 2 3
-        f 1 3 4
-        f 1 4 5
-        f 1 5 2
-        f 6 3 2
-        f 6 4 3
-        f 6 5 4
-        f 6 2 5
-        """
-        try? sampleObj.write(to: objURL, atomically: true, encoding: .utf8)
-        try? sampleObj.write(to: globalObj, atomically: true, encoding: .utf8)
+        _ = MeshReconstructor.buildReal3DModel(points: pointCloudAccumulator, outputURL: sessionObj)
+        _ = MeshReconstructor.buildReal3DModel(points: pointCloudAccumulator, outputURL: globalObj)
+        
+        DispatchQueue.main.async {
+            self.lastReconstructedModelURL = globalObj
+        }
+        
+        return folder
     }
     
     private func createNewSessionFolder() {

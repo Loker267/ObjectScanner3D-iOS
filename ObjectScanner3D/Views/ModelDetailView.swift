@@ -5,6 +5,8 @@ public struct ModelDetailView: View {
     public let modelURL: URL
     
     @State private var isWireframe = false
+    @State private var zoomScale: Float = 1.0
+    @State private var resetID = UUID()
     @State private var showARQuickLook = false
     @State private var isSharingFile = false
     @State private var fileSizeString = ""
@@ -17,24 +19,94 @@ public struct ModelDetailView: View {
         VStack(spacing: 0) {
             // Окно интерактивного 3D просмотра
             ZStack(alignment: .topTrailing) {
-                SceneKitView(modelURL: modelURL, isWireframe: isWireframe)
-                    .edgesIgnoringSafeArea(.top)
+                SceneKitView(
+                    modelURL: modelURL,
+                    isWireframe: isWireframe,
+                    zoomScale: zoomScale,
+                    resetID: resetID
+                )
+                .edgesIgnoringSafeArea(.top)
                 
-                // Переключатель режима сетки (Wireframe)
-                Button(action: {
-                    withAnimation { isWireframe.toggle() }
-                }) {
-                    Label(
-                        isWireframe ? "Текстура" : "Сетка",
-                        systemImage: isWireframe ? "cube.fill" : "square.split.diagonal.2x2"
-                    )
-                    .font(.caption)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(.ultraThinMaterial)
-                    .cornerRadius(20)
+                // Верхняя подсказка по жестам
+                VStack {
+                    HStack {
+                        Label("👆 1 палец — 360° • 🤏 2 пальца — зум", systemImage: "hand.draw")
+                            .font(.system(size: 11, weight: .semibold))
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
+                            .background(.ultraThinMaterial)
+                            .cornerRadius(16)
+                        Spacer()
+                    }
+                    .padding(.top, 10)
+                    .padding(.leading, 12)
+                    
+                    Spacer()
                 }
-                .padding()
+                
+                // Правая плавающая панель управления (Зум, Режимы, Сброс)
+                VStack(spacing: 12) {
+                    // Переключатель Сетка / Текстура
+                    Button(action: {
+                        withAnimation { isWireframe.toggle() }
+                    }) {
+                        Image(systemName: isWireframe ? "cube.fill" : "square.split.diagonal.2x2")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(.primary)
+                            .frame(width: 44, height: 44)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Circle())
+                            .shadow(color: .black.opacity(0.15), radius: 4, x: 0, y: 2)
+                    }
+                    
+                    // Зум +
+                    Button(action: {
+                        withAnimation {
+                            zoomScale = min(zoomScale + 0.3, 4.0)
+                        }
+                    }) {
+                        Image(systemName: "plus.magnifyingglass")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(.primary)
+                            .frame(width: 44, height: 44)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Circle())
+                            .shadow(color: .black.opacity(0.15), radius: 4, x: 0, y: 2)
+                    }
+                    
+                    // Зум -
+                    Button(action: {
+                        withAnimation {
+                            zoomScale = max(zoomScale - 0.3, 0.4)
+                        }
+                    }) {
+                        Image(systemName: "minus.magnifyingglass")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(.primary)
+                            .frame(width: 44, height: 44)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Circle())
+                            .shadow(color: .black.opacity(0.15), radius: 4, x: 0, y: 2)
+                    }
+                    
+                    // Сбросить камеру и масштаб
+                    Button(action: {
+                        withAnimation {
+                            zoomScale = 1.0
+                            resetID = UUID()
+                        }
+                    }) {
+                        Image(systemName: "arrow.counterclockwise")
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundColor(.primary)
+                            .frame(width: 44, height: 44)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Circle())
+                            .shadow(color: .black.opacity(0.15), radius: 4, x: 0, y: 2)
+                    }
+                }
+                .padding(.top, 12)
+                .padding(.trailing, 12)
             }
             
             // Нижняя панель действий
@@ -44,7 +116,7 @@ public struct ModelDetailView: View {
                         Text(modelURL.deletingPathExtension().lastPathComponent)
                             .font(.headline)
                             .lineLimit(1)
-                        Text("Формат: \(modelURL.pathExtension.uppercased()) • \(fileSizeString)")
+                        Text("3D Mesh • \(modelURL.pathExtension.uppercased()) • \(fileSizeString) • Масштаб: \(String(format: "%.1fx", zoomScale))")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }

@@ -20,7 +20,8 @@ public struct CaptureView: View {
     
     @State private var isSharingSession = false
     @State private var exportedFolderURL: URL?
-    @State private var showExportSuccess = false
+    @State private var exportedModelURL: URL?
+    @State private var showDirect3D = false
     
     let haptic = UIImpactFeedbackGenerator(style: .medium)
     
@@ -155,7 +156,7 @@ public struct CaptureView: View {
                         .opacity(captureManager.isScanning ? 1.0 : 0.4)
                     }
                     
-                    // Кнопка «Завершить и сгенерировать 3D»
+                    // Кнопка «Завершить и построить 3D»
                     if captureManager.capturedCount > 0 {
                         Button(action: finishScan) {
                             HStack {
@@ -177,7 +178,11 @@ public struct CaptureView: View {
         }
         .sheet(isPresented: $isSharingSession) {
             if let folder = exportedFolderURL {
-                ScanExportSheet(folderURL: folder, count: captureManager.capturedCount)
+                ScanExportSheet(
+                    folderURL: folder,
+                    modelURL: exportedModelURL,
+                    count: captureManager.capturedCount
+                )
             }
         }
     }
@@ -194,16 +199,19 @@ public struct CaptureView: View {
         haptic.impactOccurred()
         captureManager.pauseSession()
         exportedFolderURL = captureManager.finishAndExportManifest()
+        exportedModelURL = captureManager.lastReconstructedModelURL
         isSharingSession = true
     }
 }
 
-// Экран успешного экспорта сессии
+// Экран успешного экспорта сессии и перехода к просмотру 3D
 struct ScanExportSheet: View {
     let folderURL: URL
+    let modelURL: URL?
     let count: Int
     @Environment(\.dismiss) private var dismiss
     @State private var isSharingFolder = false
+    @State private var show3DView = false
     
     var body: some View {
         NavigationView {
@@ -215,13 +223,40 @@ struct ScanExportSheet: View {
                 Text("Сканирование завершено!")
                     .font(.title2.bold())
                 
-                Text("Захвачено \(count) ракурсов с точными 6DoF-матрицами камеры. Метаданные сохранены в transforms.json.")
+                Text("Собрана 3D геометрия объекта и \(count) ракурсов с точными 6DoF-координатами.")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
                 
                 VStack(spacing: 12) {
+                    // ГЛАВНАЯ КНОПКА: Открыть и покрутить 3D модель
+                    if let model = modelURL {
+                        Button(action: {
+                            show3DView = true
+                        }) {
+                            Label("Покрутить и приблизить 3D", systemImage: "cube.fill")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.green)
+                                .cornerRadius(12)
+                        }
+                        .sheet(isPresented: $show3DView) {
+                            NavigationView {
+                                ModelDetailView(modelURL: model)
+                                    .toolbar {
+                                        ToolbarItem(placement: .navigationBarLeading) {
+                                            Button("Закрыть") {
+                                                show3DView = false
+                                            }
+                                        }
+                                    }
+                            }
+                        }
+                    }
+                    
                     // Поделиться папкой датасета
                     Button(action: {
                         isSharingFolder = true
@@ -235,7 +270,7 @@ struct ScanExportSheet: View {
                             .cornerRadius(12)
                     }
                     
-                    Button("Закрыть") {
+                    Button("Назад в сканер") {
                         dismiss()
                     }
                     .font(.subheadline)
@@ -252,4 +287,3 @@ struct ScanExportSheet: View {
         }
     }
 }
-
