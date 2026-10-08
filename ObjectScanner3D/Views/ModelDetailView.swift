@@ -6,6 +6,7 @@ public struct ModelDetailView: View {
     
     @State private var isWireframe = false
     @State private var showARQuickLook = false
+    @State private var isSharingFile = false
     @State private var fileSizeString = ""
     
     public init(modelURL: URL) {
@@ -65,7 +66,9 @@ public struct ModelDetailView: View {
                     }
                     
                     // Кнопка поделиться 3D файлом
-                    ShareLink(item: modelURL) {
+                    Button(action: {
+                        isSharingFile = true
+                    }) {
                         Image(systemName: "square.and.arrow.up")
                             .font(.title3)
                             .foregroundColor(.primary)
@@ -85,6 +88,9 @@ public struct ModelDetailView: View {
         }
         .sheet(isPresented: $showARQuickLook) {
             QuickLookARController(url: modelURL)
+        }
+        .sheet(isPresented: $isSharingFile) {
+            ActivityShareSheet(items: [modelURL])
         }
     }
     
@@ -124,4 +130,15 @@ struct QuickLookARController: UIViewControllerRepresentable {
             return url as QLPreviewItem
         }
     }
+}
+
+// Универсальный диалог «Поделиться» (UIActivityViewController)
+struct ActivityShareSheet: UIViewControllerRepresentable {
+    let items: [Any]
+    
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: items, applicationActivities: nil)
+    }
+    
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }

@@ -203,6 +203,7 @@ struct ScanExportSheet: View {
     let folderURL: URL
     let count: Int
     @Environment(\.dismiss) private var dismiss
+    @State private var isSharingFolder = false
     
     var body: some View {
         NavigationView {
@@ -222,7 +223,9 @@ struct ScanExportSheet: View {
                 
                 VStack(spacing: 12) {
                     // Поделиться папкой датасета
-                    ShareLink(item: folderURL) {
+                    Button(action: {
+                        isSharingFolder = true
+                    }) {
                         Label("Поделиться датасетом (AirDrop / ПК)", systemImage: "square.and.arrow.up")
                             .font(.headline)
                             .foregroundColor(.white)
@@ -243,6 +246,10 @@ struct ScanExportSheet: View {
                 .padding(.top, 16)
             }
             .navigationBarTitleDisplayMode(.inline)
+            .sheet(isPresented: $isSharingFolder) {
+                ActivityShareSheet(items: [folderURL])
+            }
         }
     }
 }
+
