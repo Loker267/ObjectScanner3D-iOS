@@ -200,6 +200,20 @@ public class ARCaptureManager: NSObject, ObservableObject, ARSessionDelegate {
         return folder
     }
     
+    private func exportSparsePointCloudPLY(to url: URL) {
+        guard !pointCloudAccumulator.isEmpty else { return }
+        var header = "ply\nformat ascii 1.0\nelement vertex \(pointCloudAccumulator.count)\n"
+        header += "property float x\nproperty float y\nproperty float z\nend_header\n"
+        
+        var body = ""
+        for p in pointCloudAccumulator {
+            body += "\(p.x) \(p.y) \(p.z)\n"
+        }
+        
+        let full = header + body
+        try? full.write(to: url, atomically: true, encoding: .utf8)
+    }
+    
     private func createNewSessionFolder() {
         let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let formatter = DateFormatter()
