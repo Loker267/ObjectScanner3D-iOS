@@ -55,7 +55,7 @@ public class ColoredPointCloudBuilder {
         
         for p in featurePoints {
             // Проецируем 3D координаты в экранные пиксели камеры
-            let projected = frame.camera.projectPoint(p, orientation: .right, viewportSize: viewSize)
+            let projected = frame.camera.projectPoint(p, orientation: .portrait, viewportSize: viewSize)
             
             let px = Int(projected.x)
             let py = Int(projected.y)
