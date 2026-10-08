@@ -1,0 +1,297 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A1000001 /* ObjectScanner3DApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000001 /* ObjectScanner3DApp.swift */; };
+		A1000002 /* CameraPose.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000002 /* CameraPose.swift */; };
+		A1000003 /* ScanSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000003 /* ScanSession.swift */; };
+		A1000004 /* ARCaptureManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000004 /* ARCaptureManager.swift */; };
+		A1000005 /* CaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000005 /* CaptureView.swift */; };
+		A1000006 /* SceneKitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000006 /* SceneKitView.swift */; };
+		A1000007 /* ModelDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000007 /* ModelDetailView.swift */; };
+		A1000008 /* ModelsGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000008 /* ModelsGalleryView.swift */; };
+		A1000009 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1000009 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		C1000001 /* ObjectScanner3D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ObjectScanner3D.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1000001 /* ObjectScanner3DApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectScanner3DApp.swift; sourceTree = "<group>"; };
+		B1000002 /* CameraPose.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPose.swift; sourceTree = "<group>"; };
+		B1000003 /* ScanSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanSession.swift; sourceTree = "<group>"; };
+		B1000004 /* ARCaptureManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARCaptureManager.swift; sourceTree = "<group>"; };
+		B1000005 /* CaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureView.swift; sourceTree = "<group>"; };
+		B1000006 /* SceneKitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneKitView.swift; sourceTree = "<group>"; };
+		B1000007 /* ModelDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelDetailView.swift; sourceTree = "<group>"; };
+		B1000008 /* ModelsGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelsGalleryView.swift; sourceTree = "<group>"; };
+		B1000009 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B1000010 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D1000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E1000001 = {
+			isa = PBXGroup;
+			children = (
+				E1000002 /* ObjectScanner3D */,
+				E1000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E1000002 /* ObjectScanner3D */ = {
+			isa = PBXGroup;
+			children = (
+				B1000001 /* ObjectScanner3DApp.swift */,
+				B1000010 /* Info.plist */,
+				B1000009 /* Assets.xcassets */,
+				E1000004 /* Models */,
+				E1000005 /* Services */,
+				E1000006 /* Views */,
+			);
+			path = ObjectScanner3D;
+			sourceTree = "<group>";
+		};
+		E1000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C1000001 /* ObjectScanner3D.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E1000004 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B1000002 /* CameraPose.swift */,
+				B1000003 /* ScanSession.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E1000005 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				B1000004 /* ARCaptureManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		E1000006 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B1000005 /* CaptureView.swift */,
+				B1000006 /* SceneKitView.swift */,
+				B1000007 /* ModelDetailView.swift */,
+				B1000008 /* ModelsGalleryView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F1000001 /* ObjectScanner3D */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 21000004 /* Build configuration list for PBXNativeTarget "ObjectScanner3D" */;
+			buildPhases = (
+				11000001 /* Sources */,
+				D1000001 /* Frameworks */,
+				11000002 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ObjectScanner3D;
+			productName = ObjectScanner3D;
+			productReference = C1000001 /* ObjectScanner3D.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		01000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					F1000001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = 21000001 /* Build configuration list for PBXProject "ObjectScanner3D" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E1000001;
+			productRefGroup = E1000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F1000001 /* ObjectScanner3D */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		11000002 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000009 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		11000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000001 /* ObjectScanner3DApp.swift in Sources */,
+				A1000002 /* CameraPose.swift in Sources */,
+				A1000003 /* ScanSession.swift in Sources */,
+				A1000004 /* ARCaptureManager.swift in Sources */,
+				A1000005 /* CaptureView.swift in Sources */,
+				A1000006 /* SceneKitView.swift in Sources */,
+				A1000007 /* ModelDetailView.swift in Sources */,
+				A1000008 /* ModelsGalleryView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		21000002 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		21000003 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		21000005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ObjectScanner3D/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.scanner.object3d;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		21000006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ObjectScanner3D/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.scanner.object3d;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		21000001 /* Build configuration list for PBXProject "ObjectScanner3D" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				21000002 /* Debug */,
+				21000003 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		21000004 /* Build configuration list for PBXNativeTarget "ObjectScanner3D" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				21000005 /* Debug */,
+				21000006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+	};
+	rootObject = 01000001 /* Project object */;
+}

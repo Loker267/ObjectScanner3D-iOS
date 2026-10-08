@@ -1,0 +1,49 @@
+name: Build ObjectScanner3D iOS IPA
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build Unsigned IPA
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Xcode
+        run: |
+          xcodebuild -version
+
+      - name: Build and Archive
+        run: |
+          xcodebuild clean archive \
+            -project ObjectScanner3D.xcodeproj \
+            -scheme ObjectScanner3D \
+            -configuration Release \
+            -destination "generic/platform=iOS" \
+            -archivePath "build/ObjectScanner3D.xcarchive" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            AD_HOC_CODE_SIGNING_ALLOWED=YES
+
+      - name: Package into IPA
+        run: |
+          mkdir -p Payload
+          cp -r "build/ObjectScanner3D.xcarchive/Products/Applications/ObjectScanner3D.app" Payload/
+          zip -qr "ObjectScanner3D.ipa" Payload
+          ls -lh ObjectScanner3D.ipa
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ObjectScanner3D-iOS-v1.0.0
+          path: ObjectScanner3D.ipa
+          retention-days: 14
