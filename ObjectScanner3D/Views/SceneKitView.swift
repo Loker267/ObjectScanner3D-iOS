@@ -72,6 +72,14 @@ public struct SceneKitView: UIViewRepresentable {
     }
     
     private func loadScene(from url: URL) -> SCNScene {
+        if url.pathExtension.lowercased() == "ply",
+           let coloredNode = ColoredPointCloudBuilder.createColoredSCNNode(from: url) {
+            let scene = SCNScene()
+            scene.rootNode.addChildNode(coloredNode)
+            centerSceneGeometry(scene: scene)
+            return scene
+        }
+        
         if let scene = try? SCNScene(url: url, options: [
             .checkConsistency: true,
             .flattenScene: false

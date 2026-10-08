@@ -28,6 +28,7 @@ public class ARCaptureManager: NSObject, ObservableObject, ARSessionDelegate {
     private var poses: [CameraPose] = []
     private var pointCloudAccumulator: [SIMD3<Float>] = []
     private var ciContext = CIContext()
+    private let colorCloudBuilder = ColoredPointCloudBuilder()
     
     override public init() {
         super.init()
@@ -45,6 +46,7 @@ public class ARCaptureManager: NSObject, ObservableObject, ARSessionDelegate {
         createNewSessionFolder()
         poses.removeAll()
         pointCloudAccumulator.removeAll()
+        colorCloudBuilder.clear()
         capturedCount = 0
         lastCapturedTransform = nil
         isScanning = true
@@ -125,6 +127,7 @@ public class ARCaptureManager: NSObject, ObservableObject, ARSessionDelegate {
                 if let jpegData = uiImage.jpegData(compressionQuality: 0.88) {
                     try? jpegData.write(to: fileURL)
                 }
+                self.colorCloudBuilder.ingestFrame(frame: frame, image: uiImage)
                 DispatchQueue.main.async {
                     self.lastSavedImage = uiImage
                 }
@@ -182,19 +185,21 @@ public class ARCaptureManager: NSObject, ObservableObject, ARSessionDelegate {
             }
         }
         
-        // 2. Экспортируем собранное VIO-облако точек в стандартный .ply
-        exportSparsePointCloudPLY(to: folder.appendingPathComponent("sparse_cloud.ply"))
-        
-        // 3. Создаем реальную 3D модель на основе точек сканирования
-        let sessionObj = folder.appendingPathComponent("reconstructed_mesh.obj")
+        // 2. Экспортируем собранное цветное VIO-облако точек в стандартный .ply
+        let plyURL = folder.appendingPathComponent("reconstructed_color_model.ply")
         let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let globalObj = docs.appendingPathComponent("\(folder.lastPathComponent).obj")
+        let globalPly = docs.appendingPathComponent("\(folder.lastPathComponent).ply")
+        colorCloudBuilder.exportColoredPLY(to: plyURL)
+        colorCloudBuilder.exportColoredPLY(to: globalPly)
         
-        _ = MeshReconstructor.buildReal3DModel(points: pointCloudAccumulator, outputURL: sessionObj)
-        _ = MeshReconstructor.buildReal3DModel(points: pointCloudAccumulator, outputURL: globalObj)
+        // 3. Создаем также цветную 3D OBJ модель
+        let objURL = folder.appendingPathComponent("reconstructed_mesh.obj")
+        let globalObj = docs.appendingPathComponent("\(folder.lastPathComponent).obj")
+        colorCloudBuilder.exportColoredOBJ(to: objURL)
+        colorCloudBuilder.exportColoredOBJ(to: globalObj)
         
         DispatchQueue.main.async {
-            self.lastReconstructedModelURL = globalObj
+            self.lastReconstructedModelURL = globalPly
         }
         
         return folder

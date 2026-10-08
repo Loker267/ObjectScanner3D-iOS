@@ -17,6 +17,7 @@
 		A1000008 /* ModelsGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000008 /* ModelsGalleryView.swift */; };
 		A1000009 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1000009 /* Assets.xcassets */; };
 		A1000010 /* MeshReconstructor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000014 /* MeshReconstructor.swift */; };
+		A1000011 /* ColoredPointCloudBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000015 /* ColoredPointCloudBuilder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		B1000009 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B1000010 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B1000014 /* MeshReconstructor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshReconstructor.swift; sourceTree = "<group>"; };
+		B1000015 /* ColoredPointCloudBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColoredPointCloudBuilder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +90,7 @@
 			children = (
 				B1000004 /* ARCaptureManager.swift */,
 				B1000014 /* MeshReconstructor.swift */,
+				B1000015 /* ColoredPointCloudBuilder.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -180,6 +183,7 @@
 				A1000007 /* ModelDetailView.swift in Sources */,
 				A1000008 /* ModelsGalleryView.swift in Sources */,
 				A1000010 /* MeshReconstructor.swift in Sources */,
+				A1000011 /* ColoredPointCloudBuilder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
