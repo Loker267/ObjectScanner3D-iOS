@@ -87,13 +87,10 @@ public struct SceneKitView: UIViewRepresentable {
     }
     
     private func centerSceneGeometry(scene: SCNScene) {
-        var minVec = SCNVector3Zero
-        var maxVec = SCNVector3Zero
-        scene.rootNode.getBoundingBox(min: &minVec, max: &maxVec)
-        
-        let centerX = (minVec.x + maxVec.x) / 2.0
-        let centerY = (minVec.y + maxVec.y) / 2.0
-        let centerZ = (minVec.z + maxVec.z) / 2.0
+        let box = scene.rootNode.boundingBox
+        let centerX = (box.min.x + box.max.x) / 2.0
+        let centerY = (box.min.y + box.max.y) / 2.0
+        let centerZ = (box.min.z + box.max.z) / 2.0
         
         for child in scene.rootNode.childNodes {
             child.position = SCNVector3(
